@@ -34,7 +34,7 @@ public class JiraRevikiRenderingPlugin implements JiraRendererPlugin {
 
   @Override
   public String render(final String text, final IssueRenderContext ctx) {
-    throw new UnsupportedOperationException("Not yet implemented.");
+    return JiraRevikiRenderer.render(text, _rendererManager, ctx);
   }
 
   @Override
