@@ -18,6 +18,13 @@
     <description>This is the net.hillsdon.reviki:reviki-renderer plugin for Atlassian JIRA.</description>
     <packaging>atlassian-plugin</packaging>
 
+    <repositories>
+        <repository>
+            <id>repo</id>
+            <url>file://${project.basedir}/repo</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>com.atlassian.jira</groupId>
@@ -71,6 +78,21 @@
 			<scope>test</scope>
 		</dependency>
 		-->
+		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>antlr4-runtime</artifactId>
+			<version>4.2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.uwyn</groupId>
+			<artifactId>jhighlight</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>net.hillsdon.reviki</groupId>
+			<artifactId>reviki-renderer</artifactId>
+			<version>1.0.0</version>
+		</dependency>
     </dependencies>
 
     <build>
