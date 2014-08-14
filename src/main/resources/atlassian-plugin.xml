@@ -7,10 +7,8 @@
 
   <jira-renderer key="atlassian-jira-reviki-renderer"
                  name="Reviki Renderer"
-                 class="net.hillsdon.reviki.jira.JiraRevikiRenderingPlugin">
+                 class="net.hillsdon.reviki.jira.renderer.JiraRevikiRenderingPlugin">
     <description>A field renderer that will render Reviki content</description>
     <resource type="velocity" name="edit" location="templates/reviki-edit.vm"/>
   </jira-renderer>
-
-  <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
 </atlassian-plugin>
