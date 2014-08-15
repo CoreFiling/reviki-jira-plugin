@@ -12,6 +12,7 @@
     <name>reviki-renderer</name>
     <description>This is the net.hillsdon.reviki:reviki-renderer plugin for Atlassian JIRA.</description>
     <packaging>atlassian-plugin</packaging>
+    <url>https://github.com/Barrucadu/jira-reviki-plugin</url>
 
     <repositories>
         <repository>
