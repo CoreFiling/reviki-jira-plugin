@@ -4,11 +4,9 @@ This plugin brings the [Reviki][reviki] wiki syntax to JIRA, allowing
 comments and the like to be written using it. A CSS file providing the
 default JHighlighter styles is also included.
 
-## Running
+## Running in the development environment
 
-I've only run this in the development environment, so install the
-Atlassian SDK, set up a JIRA development instance, and clone this repo
-to a the same place as the JIRA installation, e.g.,
+Clone this repo to the same place as the JIRA installation, e.g.,
 
     atlas/
       - amps-standalone/
@@ -22,6 +20,13 @@ the renderer jar,
     cd jira-reviki-plugin
     ./fetch-reviki.sh
     atlas-run
+
+## Packaging
+
+    ./fetch-reviki-sh
+    atlas-mvn package
+
+The plugin is now available at `target/reviki-renderer-1.0-SNAPSHOT.jar`.
 
 ## Licensing
 
