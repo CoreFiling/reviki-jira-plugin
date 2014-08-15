@@ -11,4 +11,9 @@
     <description>A field renderer that will render Reviki content</description>
     <resource type="velocity" name="edit" location="templates/reviki-edit.vm"/>
   </jira-renderer>
+
+  <web-resource key="atlassian-jira-reviki-css" name="Jira Reviki Renderer CSS">
+    <context>jira.general</context>
+    <resource type="download" name="reviki-style.css" location="style/reviki-style.css"/>
+  </web-resource>
 </atlassian-plugin>
