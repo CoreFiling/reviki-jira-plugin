@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import com.atlassian.jira.issue.RendererManager;
 import com.atlassian.jira.issue.fields.renderer.IssueRenderContext;
@@ -37,7 +38,7 @@ public final class JiraRevikiRenderer {
   static {
     SimpleWikiUrls wikiUrls = new SimpleWikiUrls() {
       public String pagesRoot() {
-        return "/";
+        return "/jira/browse/";
       }
 
       public URI page(String pageName) {
@@ -69,9 +70,29 @@ public final class JiraRevikiRenderer {
   }
 
   public static String render(final String text, final RendererManager rendererManager, final IssueRenderContext ctx) {
-    PageInfo page = new PageInfoImpl("", "", text, Collections.<String, String> emptyMap());
+    PageInfo page = new PageInfoImpl("", "", confluenceToReviki(text), Collections.<String, String> emptyMap());
     Optional<String> rendered = _renderer.render(page, URLOutputFilter.NULL);
 
     return rendered.isPresent() ? rendered.get() : text;
+  }
+
+  /** Match Confluence-style links in single square brackets. */
+  private static final Pattern confluenceLinks = Pattern.compile("([^\\[]|^)(\\[[~@]*[^\\\\,\\[\\]]+?\\])([^\\]]|$)");
+
+  /** Replacement text to turn Confluence-style links into Reviki-style links. */
+  private static final String revikiReplacement = "$1[$2]$3";
+
+  /**
+   * Convert Confluence-style links ("[FOO-1]") to Reviki-style links
+   * ("[[FOO-1]]"), this allows backwards compatibility in linking to issues.
+   */
+  private static String confluenceToReviki(final String text) {
+    // Need to run the regex twice because of overlapping matches.
+    //
+    // eg: "[FOO-1] [FOO-1] [FOO-1]" - just replacing once results in
+    // "[[FOO-1]] [FOO-1] [[FOO-1]]"
+
+    String first = confluenceLinks.matcher(text).replaceAll(revikiReplacement);
+    return confluenceLinks.matcher(first).replaceAll(revikiReplacement);
   }
 }
