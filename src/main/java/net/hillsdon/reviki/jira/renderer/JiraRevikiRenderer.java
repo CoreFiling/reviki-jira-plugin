@@ -44,26 +44,7 @@ public final class JiraRevikiRenderer {
 
   static {
     // Have all internal relative links start from /jira/browse/
-    SimpleWikiUrls wikiUrls = new SimpleWikiUrls() {
-      public String pagesRoot() {
-        return "/jira/browse/";
-      }
-
-      public URI page(String pageName) {
-        URI root = URI.create(pagesRoot());
-        try {
-          String path = root.getPath();
-          if (!path.endsWith("/")) {
-            path = path + "/";
-          }
-          return new URI(root.getScheme(), root.getUserInfo(), root.getHost(), root.getPort(), path + pageName, root.getQuery(), root.getFragment());
-        }
-        catch (URISyntaxException e) {
-          throw new RuntimeException(e);
-        }
-      }
-    };
-
+    SimpleWikiUrls wikiUrls = SimpleWikiUrls.RELATIVE_TO.apply("/jira/browse/");
     InternalLinker linker = new InternalLinker(wikiUrls);
 
     // We know of no other wikis.
