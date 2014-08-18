@@ -33,9 +33,17 @@ import net.hillsdon.reviki.wiki.renderer.macro.Macro;
  * @author msw
  */
 public final class JiraRevikiRenderer {
+  /** Match Confluence-style links in single square brackets. */
+  private static final Pattern confluenceLinks = Pattern.compile("([^\\[]|^)(\\[[~@]*[^\\\\,\\[\\]]+?\\])([^\\]]|$)");
+
+  /** Replacement text to turn Confluence-style links into Reviki-style links. */
+  private static final String revikiReplacement = "$1[$2]$3";
+
+  /** Render Reviki markup to HTML, complete with link handling. */
   private static final HtmlRenderer _renderer;
 
   static {
+    // Have all internal relative links start from /jira/browse/
     SimpleWikiUrls wikiUrls = new SimpleWikiUrls() {
       public String pagesRoot() {
         return "/jira/browse/";
@@ -57,30 +65,41 @@ public final class JiraRevikiRenderer {
     };
 
     InternalLinker linker = new InternalLinker(wikiUrls);
+
+    // We know of no other wikis.
     InterWikiLinker wikilinker = new InterWikiLinker();
+
+    // Or any pages.
     SimplePageStore pageStore = new DummyPageStore();
 
     LinkResolutionContext resolver = new LinkResolutionContext(linker, wikilinker, pageStore);
 
+    // Render links as links, and images as images.
     LinkPartsHandler linkHandler = new DummyLinkHandler(DummyLinkHandler.ANCHOR, resolver);
     LinkPartsHandler imageHandler = new DummyLinkHandler(DummyLinkHandler.IMAGE, resolver);
+
+    // We have no macros, either.
     Supplier<List<Macro>> macros = Suppliers.ofInstance((List<Macro>) new LinkedList<Macro>());
 
+    // Finally, construct the renderer.
     _renderer = new HtmlRenderer(pageStore, linkHandler, imageHandler, macros);
   }
 
+  /**
+   * Render some markup to HTML.
+   */
   public static String render(final String text, final RendererManager rendererManager, final IssueRenderContext ctx) {
-    PageInfo page = new PageInfoImpl("", "", confluenceToReviki(text), Collections.<String, String> emptyMap());
-    Optional<String> rendered = _renderer.render(page, URLOutputFilter.NULL);
+    // First fix any Confluence-style links for backwards-compatibility.
+    String contents = confluenceToReviki(text);
 
+    // Then construct a dummy page, containing just the markup we want to
+    // render.
+    PageInfo page = new PageInfoImpl("", "", contents, Collections.<String, String> emptyMap());
+
+    // Try rendering it, and return the original markup if we fail.
+    Optional<String> rendered = _renderer.render(page, URLOutputFilter.NULL);
     return rendered.isPresent() ? rendered.get() : text;
   }
-
-  /** Match Confluence-style links in single square brackets. */
-  private static final Pattern confluenceLinks = Pattern.compile("([^\\[]|^)(\\[[~@]*[^\\\\,\\[\\]]+?\\])([^\\]]|$)");
-
-  /** Replacement text to turn Confluence-style links into Reviki-style links. */
-  private static final String revikiReplacement = "$1[$2]$3";
 
   /**
    * Convert Confluence-style links ("[FOO-1]") to Reviki-style links
