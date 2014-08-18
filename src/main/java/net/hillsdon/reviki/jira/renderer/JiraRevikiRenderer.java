@@ -22,7 +22,8 @@ import net.hillsdon.reviki.web.urls.InternalLinker;
 import net.hillsdon.reviki.web.urls.URLOutputFilter;
 import net.hillsdon.reviki.web.urls.SimpleWikiUrls;
 import net.hillsdon.reviki.wiki.renderer.HtmlRenderer;
-import net.hillsdon.reviki.wiki.renderer.creole.DummyLinkHandler;
+import net.hillsdon.reviki.wiki.renderer.creole.SimpleAnchors;
+import net.hillsdon.reviki.wiki.renderer.creole.SimpleImages;
 import net.hillsdon.reviki.wiki.renderer.creole.LinkPartsHandler;
 import net.hillsdon.reviki.wiki.renderer.creole.LinkResolutionContext;
 import net.hillsdon.reviki.wiki.renderer.macro.Macro;
@@ -56,8 +57,8 @@ public final class JiraRevikiRenderer {
     LinkResolutionContext resolver = new LinkResolutionContext(linker, wikilinker, pageStore);
 
     // Render links as links, and images as images.
-    LinkPartsHandler linkHandler = new DummyLinkHandler(DummyLinkHandler.ANCHOR, resolver);
-    LinkPartsHandler imageHandler = new DummyLinkHandler(DummyLinkHandler.IMAGE, resolver);
+    LinkPartsHandler linkHandler = new SimpleAnchors(resolver);
+    LinkPartsHandler imageHandler = new SimpleImages(resolver);
 
     // We have no macros, either.
     Supplier<List<Macro>> macros = Suppliers.ofInstance((List<Macro>) new LinkedList<Macro>());
