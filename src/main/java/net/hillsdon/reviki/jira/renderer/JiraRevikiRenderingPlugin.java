@@ -1,5 +1,8 @@
 package net.hillsdon.reviki.jira.renderer;
 
+import java.io.InputStream;
+import java.util.Properties;
+
 import com.atlassian.jira.issue.RendererManager;
 import com.atlassian.jira.issue.fields.renderer.IssueRenderContext;
 import com.atlassian.jira.issue.fields.renderer.JiraRendererPlugin;
@@ -10,11 +13,10 @@ public class JiraRevikiRenderingPlugin implements JiraRendererPlugin {
 
   private JiraRendererModuleDescriptor _jiraRendererModuleDescriptor;
 
-  private final RendererManager _rendererManager;
+  private final JiraRevikiRenderer _renderer;
 
-  public JiraRevikiRenderingPlugin(final RendererManager rendererManager)
-  {
-      _rendererManager = rendererManager;
+  public JiraRevikiRenderingPlugin(final RendererManager rendererManager) {
+    _renderer = new JiraRevikiRenderer(getProperties(), rendererManager);
   }
 
   @Override
@@ -34,7 +36,7 @@ public class JiraRevikiRenderingPlugin implements JiraRendererPlugin {
 
   @Override
   public String render(final String text, final IssueRenderContext ctx) {
-    return JiraRevikiRenderer.render(text, _rendererManager, ctx);
+    return _renderer.render(text, ctx);
   }
 
   @Override
@@ -50,5 +52,21 @@ public class JiraRevikiRenderingPlugin implements JiraRendererPlugin {
   @Override
   public Object transformFromEdit(final Object editValue) {
     return editValue;
+  }
+
+  /**
+   * Get the plugin properties.
+   */
+  private Properties getProperties() {
+    try {
+      Properties properties = new Properties();
+      InputStream stream = getClass().getClassLoader().getResourceAsStream("reviki-renderer.properties");
+      properties.load(stream);
+      stream.close();
+      return properties;
+    }
+    catch (Exception e) {
+      return new Properties();
+    }
   }
 }

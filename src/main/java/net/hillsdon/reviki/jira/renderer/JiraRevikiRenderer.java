@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 import java.util.regex.Pattern;
 
 import com.atlassian.jira.issue.RendererManager;
@@ -43,6 +44,12 @@ public final class JiraRevikiRenderer {
   /** Render Reviki markup to HTML, complete with link handling. */
   private static final HtmlRenderer _renderer;
 
+  /** Plugin configuration. */
+  private final Properties _properties;
+
+  /** Reference to the renderer manager. */
+  private final RendererManager _rendererManager;
+
   static {
     // Have all internal relative links start from /jira/browse/
     SimpleWikiUrls wikiUrls = SimpleWikiUrls.RELATIVE_TO.apply("/jira/browse/");
@@ -67,12 +74,22 @@ public final class JiraRevikiRenderer {
     _renderer = new HtmlRenderer(pageStore, linkHandler, imageHandler, macros);
   }
 
+  public JiraRevikiRenderer(final Properties properties, final RendererManager rendererManager) {
+    _properties = properties;
+    _rendererManager = rendererManager;
+  }
+
   /**
    * Render some markup to HTML.
    */
-  public static String render(final String text, final RendererManager rendererManager, final IssueRenderContext ctx) {
+  public String render(final String text, final IssueRenderContext ctx) {
+    String contents = text;
+
     // First fix any Confluence-style links for backwards-compatibility.
-    String contents = confluenceToReviki(text);
+    String torev = _properties.getProperty("convertConfluence", "yes").toLowerCase();
+    if (torev.equals("yes") || torev.equals("y") || torev.equals("true")) {
+      contents = confluenceToReviki(text);
+    }
 
     // Then construct a dummy page, containing just the markup we want to
     // render.

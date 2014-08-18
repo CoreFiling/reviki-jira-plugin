@@ -28,6 +28,15 @@ the renderer jar,
 
 The plugin is now available at `target/reviki-renderer-1.0-SNAPSHOT.jar`.
 
+## Confluence-style Links
+
+By default, this also renders Confleunce style
+`[single square brackets]` links, in addition to Reviki-style
+`[[double square brackets]]` links.
+
+In order to disable this behaviour, edit
+src/main/resources/reviki-renderer.properties.
+
 ## Licensing
 
 This plugin is made available under the Apache 2.0 license, because
