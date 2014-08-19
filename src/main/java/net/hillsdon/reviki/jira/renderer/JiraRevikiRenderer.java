@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 import com.atlassian.jira.issue.RendererManager;
 import com.atlassian.jira.issue.fields.renderer.IssueRenderContext;
+import com.atlassian.sal.api.pluginsettings.PluginSettings;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.base.Optional;
@@ -35,6 +36,8 @@ import net.hillsdon.reviki.wiki.renderer.macro.Macro;
  * @author msw
  */
 public final class JiraRevikiRenderer {
+  public static final String CONFLUENCE_LINK_CONFIG_KEY = "convertConfluence";
+
   /** Match Confluence-style links in single square brackets. */
   private static final Pattern confluenceLinks = Pattern.compile("([^\\[]|^)(\\[[~@]*[^\\\\,\\[\\]]+?\\])([^\\]]|$)");
 
@@ -45,7 +48,7 @@ public final class JiraRevikiRenderer {
   private static final HtmlRenderer _renderer;
 
   /** Plugin configuration. */
-  private final Properties _properties;
+  private final PluginSettings _pluginSettings;
 
   /** Reference to the renderer manager. */
   private final RendererManager _rendererManager;
@@ -74,8 +77,8 @@ public final class JiraRevikiRenderer {
     _renderer = new HtmlRenderer(pageStore, linkHandler, imageHandler, macros);
   }
 
-  public JiraRevikiRenderer(final Properties properties, final RendererManager rendererManager) {
-    _properties = properties;
+  public JiraRevikiRenderer(final PluginSettings pluginSettings, final RendererManager rendererManager) {
+    _pluginSettings = pluginSettings;
     _rendererManager = rendererManager;
   }
 
@@ -86,8 +89,13 @@ public final class JiraRevikiRenderer {
     String contents = text;
 
     // First fix any Confluence-style links for backwards-compatibility.
-    String torev = _properties.getProperty("convertConfluence", "yes").toLowerCase();
-    if (torev.equals("yes") || torev.equals("y") || torev.equals("true")) {
+    //
+    // Now, you might think it would be good to use a Boolean here. After all,
+    // put/get use Object, rather than any more specific type, so clearly I
+    // could do that, right? Nope. JiraPluginSettings extends
+    // AbstractStringPluginSettings, which only accepts Strings. Anything else
+    // raises an IllegalArgumentException.
+    if (getProperty(CONFLUENCE_LINK_CONFIG_KEY, "y").equals("y")) {
       contents = confluenceToReviki(text);
     }
 
@@ -112,5 +120,14 @@ public final class JiraRevikiRenderer {
 
     String first = confluenceLinks.matcher(text).replaceAll(revikiReplacement);
     return confluenceLinks.matcher(first).replaceAll(revikiReplacement);
+  }
+
+  /**
+   * Get a value from the settings with a default.
+   */
+  @SuppressWarnings("unchecked")
+  public <T> T getProperty(String name, T def) {
+    Object out = _pluginSettings.get(name);
+    return (out == null) ? def : (T) out;
   }
 }

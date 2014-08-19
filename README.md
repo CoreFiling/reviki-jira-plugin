@@ -34,8 +34,8 @@ By default, this also renders Confleunce style
 `[single square brackets]` links, in addition to Reviki-style
 `[[double square brackets]]` links.
 
-In order to disable this behaviour, edit
-src/main/resources/reviki-renderer.properties.
+In order to disable this behaviour, see the plugin configuration
+(accessible through the admin panel).
 
 ## Licensing
 

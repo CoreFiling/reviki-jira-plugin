@@ -1,22 +1,26 @@
 package net.hillsdon.reviki.jira.renderer;
 
-import java.io.InputStream;
-import java.util.Properties;
-
 import com.atlassian.jira.issue.RendererManager;
 import com.atlassian.jira.issue.fields.renderer.IssueRenderContext;
 import com.atlassian.jira.issue.fields.renderer.JiraRendererPlugin;
 import com.atlassian.jira.plugin.renderer.JiraRendererModuleDescriptor;
+import com.atlassian.sal.api.pluginsettings.PluginSettings;
+import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
 
 public class JiraRevikiRenderingPlugin implements JiraRendererPlugin {
   public static final String RENDERER_TYPE = "atlassian-jira-reviki-renderer";
+
+  public static final String SETTINGS_KEY = "JiraRevikiRenderer";
 
   private JiraRendererModuleDescriptor _jiraRendererModuleDescriptor;
 
   private final JiraRevikiRenderer _renderer;
 
-  public JiraRevikiRenderingPlugin(final RendererManager rendererManager) {
-    _renderer = new JiraRevikiRenderer(getProperties(), rendererManager);
+  private final PluginSettings _pluginSettings;
+
+  public JiraRevikiRenderingPlugin(final RendererManager rendererManager, final PluginSettingsFactory pluginSettingsFactory) {
+    _pluginSettings = pluginSettingsFactory.createSettingsForKey(SETTINGS_KEY);
+    _renderer = new JiraRevikiRenderer(_pluginSettings, rendererManager);
   }
 
   @Override
@@ -52,21 +56,5 @@ public class JiraRevikiRenderingPlugin implements JiraRendererPlugin {
   @Override
   public Object transformFromEdit(final Object editValue) {
     return editValue;
-  }
-
-  /**
-   * Get the plugin properties.
-   */
-  private Properties getProperties() {
-    try {
-      Properties properties = new Properties();
-      InputStream stream = getClass().getClassLoader().getResourceAsStream("reviki-renderer.properties");
-      properties.load(stream);
-      stream.close();
-      return properties;
-    }
-    catch (Exception e) {
-      return new Properties();
-    }
   }
 }
