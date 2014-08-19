@@ -4,22 +4,22 @@ import com.atlassian.jira.issue.RendererManager;
 import com.atlassian.jira.issue.fields.renderer.IssueRenderContext;
 import com.atlassian.jira.issue.fields.renderer.JiraRendererPlugin;
 import com.atlassian.jira.plugin.renderer.JiraRendererModuleDescriptor;
-import com.atlassian.sal.api.pluginsettings.PluginSettings;
 import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
 
 public class JiraRevikiRenderingPlugin implements JiraRendererPlugin {
   public static final String RENDERER_TYPE = "atlassian-jira-reviki-renderer";
 
-  public static final String SETTINGS_KEY = "JiraRevikiRenderer";
-
   private JiraRendererModuleDescriptor _jiraRendererModuleDescriptor;
 
   private final JiraRevikiRenderer _renderer;
 
-  private final PluginSettings _pluginSettings;
+  private final RevikiPluginConfiguration _pluginSettings;
 
   public JiraRevikiRenderingPlugin(final RendererManager rendererManager, final PluginSettingsFactory pluginSettingsFactory) {
-    _pluginSettings = pluginSettingsFactory.createSettingsForKey(SETTINGS_KEY);
+    // The dependency injection doesn't seem to be able to cope with depending
+    // on a class in the same plugin, so we have to settle for getting the
+    // PluginSettingsFactory directly.
+    _pluginSettings = new RevikiPluginConfiguration(pluginSettingsFactory);
     _renderer = new JiraRevikiRenderer(_pluginSettings, rendererManager);
   }
 

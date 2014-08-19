@@ -6,6 +6,9 @@
     <param name="configure.url">/secure/admin/configureRevikiPlugin.jspa</param>
   </plugin-info>
 
+  <component-import key="pluginSettingsFactory"
+                    interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory" />
+
   <jira-renderer key="atlassian-jira-reviki-renderer"
                  name="Reviki Renderer"
                  class="net.hillsdon.reviki.jira.renderer.JiraRevikiRenderingPlugin">
@@ -17,9 +20,6 @@
     <context>jira.general</context>
     <resource type="download" name="reviki-style.css" location="style/reviki-style.css"/>
   </web-resource>
-
-  <component-import key="pluginSettingsFactory"
-                    interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory" />
 
   <webwork1 key="atlassian-jira-reviki-config"
             name="Jira Reviki Renderer Configuration"

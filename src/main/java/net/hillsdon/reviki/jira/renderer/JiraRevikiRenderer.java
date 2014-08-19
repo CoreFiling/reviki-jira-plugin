@@ -10,7 +10,6 @@ import java.util.regex.Pattern;
 
 import com.atlassian.jira.issue.RendererManager;
 import com.atlassian.jira.issue.fields.renderer.IssueRenderContext;
-import com.atlassian.sal.api.pluginsettings.PluginSettings;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.base.Optional;
@@ -48,7 +47,7 @@ public final class JiraRevikiRenderer {
   private static final HtmlRenderer _renderer;
 
   /** Plugin configuration. */
-  private final PluginSettings _pluginSettings;
+  private final RevikiPluginConfiguration _pluginSettings;
 
   /** Reference to the renderer manager. */
   private final RendererManager _rendererManager;
@@ -77,7 +76,7 @@ public final class JiraRevikiRenderer {
     _renderer = new HtmlRenderer(pageStore, linkHandler, imageHandler, macros);
   }
 
-  public JiraRevikiRenderer(final PluginSettings pluginSettings, final RendererManager rendererManager) {
+  public JiraRevikiRenderer(final RevikiPluginConfiguration pluginSettings, final RendererManager rendererManager) {
     _pluginSettings = pluginSettings;
     _rendererManager = rendererManager;
   }
@@ -89,13 +88,7 @@ public final class JiraRevikiRenderer {
     String contents = text;
 
     // First fix any Confluence-style links for backwards-compatibility.
-    //
-    // Now, you might think it would be good to use a Boolean here. After all,
-    // put/get use Object, rather than any more specific type, so clearly I
-    // could do that, right? Nope. JiraPluginSettings extends
-    // AbstractStringPluginSettings, which only accepts Strings. Anything else
-    // raises an IllegalArgumentException.
-    if (getProperty(CONFLUENCE_LINK_CONFIG_KEY, "y").equals("y")) {
+    if (_pluginSettings.get(CONFLUENCE_LINK_CONFIG_KEY, Boolean.TRUE).booleanValue()) {
       contents = confluenceToReviki(text);
     }
 
@@ -120,14 +113,5 @@ public final class JiraRevikiRenderer {
 
     String first = confluenceLinks.matcher(text).replaceAll(revikiReplacement);
     return confluenceLinks.matcher(first).replaceAll(revikiReplacement);
-  }
-
-  /**
-   * Get a value from the settings with a default.
-   */
-  @SuppressWarnings("unchecked")
-  public <T> T getProperty(String name, T def) {
-    Object out = _pluginSettings.get(name);
-    return (out == null) ? def : (T) out;
   }
 }
