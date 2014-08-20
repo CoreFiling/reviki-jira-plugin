@@ -9,6 +9,9 @@
   <component-import key="pluginSettingsFactory"
                     interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory" />
 
+  <component key="revikiPluginConfiguration"
+             class="net.hillsdon.reviki.jira.renderer.RevikiPluginConfiguration" />
+
   <jira-renderer key="atlassian-jira-reviki-renderer"
                  name="Reviki Renderer"
                  class="net.hillsdon.reviki.jira.renderer.JiraRevikiRenderingPlugin">

@@ -3,15 +3,14 @@ package net.hillsdon.reviki.jira.renderer;
 import java.util.Map;
 
 import com.atlassian.jira.web.action.JiraWebActionSupport;
-import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
 
 import webwork.action.ActionContext;
 
 public class WebConfig extends JiraWebActionSupport {
   private final RevikiPluginConfiguration _pluginSettings;
 
-  public WebConfig(final PluginSettingsFactory pluginSettingsFactory) {
-    _pluginSettings = new RevikiPluginConfiguration(pluginSettingsFactory);
+  public WebConfig(final RevikiPluginConfiguration pluginSettings) {
+    _pluginSettings = pluginSettings;
   }
 
   @Override
