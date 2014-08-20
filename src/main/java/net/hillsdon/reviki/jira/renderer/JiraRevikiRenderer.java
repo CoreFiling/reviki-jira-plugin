@@ -61,17 +61,8 @@ public final class JiraRevikiRenderer {
     // Or any pages.
     SimplePageStore pageStore = new DummyPageStore();
 
-    LinkResolutionContext resolver = new LinkResolutionContext(linker, wikilinker, pageStore);
-
-    // Render links as links, and images as images.
-    LinkPartsHandler linkHandler = new SimpleAnchors(resolver);
-    LinkPartsHandler imageHandler = new SimpleImages(resolver);
-
-    // We have no macros, either.
-    Supplier<List<Macro>> macros = Suppliers.ofInstance((List<Macro>) new LinkedList<Macro>());
-
     // Finally, construct the renderer.
-    _renderer = new HtmlRenderer(pageStore, linkHandler, imageHandler, macros);
+    _renderer = new HtmlRenderer(new LinkResolutionContext(linker, wikilinker, pageStore));
   }
 
   public JiraRevikiRenderer(final RevikiPluginConfiguration pluginSettings, final RendererManager rendererManager) {
