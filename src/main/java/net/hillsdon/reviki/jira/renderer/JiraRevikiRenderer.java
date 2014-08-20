@@ -14,17 +14,8 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.base.Optional;
 
-import net.hillsdon.reviki.vc.SimplePageStore;
-import net.hillsdon.reviki.vc.impl.DummyPageStore;
-import net.hillsdon.reviki.web.urls.InterWikiLinker;
-import net.hillsdon.reviki.web.urls.InternalLinker;
-import net.hillsdon.reviki.web.urls.SimpleWikiUrls;
 import net.hillsdon.reviki.wiki.renderer.HtmlRenderer;
-import net.hillsdon.reviki.wiki.renderer.creole.SimpleAnchors;
-import net.hillsdon.reviki.wiki.renderer.creole.SimpleImages;
-import net.hillsdon.reviki.wiki.renderer.creole.LinkPartsHandler;
 import net.hillsdon.reviki.wiki.renderer.creole.LinkResolutionContext;
-import net.hillsdon.reviki.wiki.renderer.macro.Macro;
 
 /**
  * A simple interface to Reviki's HTML rendering capabilities.
@@ -39,28 +30,13 @@ public final class JiraRevikiRenderer {
   private static final String revikiReplacement = "$1[$2]$3";
 
   /** Render Reviki markup to HTML, complete with link handling. */
-  private static final HtmlRenderer _renderer;
+  private static final HtmlRenderer _renderer = new HtmlRenderer(LinkResolutionContext.SIMPLE_LINKS.apply("/jira/browse"));
 
   /** Plugin configuration. */
   private final RevikiPluginConfiguration _pluginSettings;
 
   /** Reference to the renderer manager. */
   private final RendererManager _rendererManager;
-
-  static {
-    // Have all internal relative links start from /jira/browse/
-    SimpleWikiUrls wikiUrls = SimpleWikiUrls.RELATIVE_TO.apply("/jira/browse/");
-    InternalLinker linker = new InternalLinker(wikiUrls);
-
-    // We know of no other wikis.
-    InterWikiLinker wikilinker = new InterWikiLinker();
-
-    // Or any pages.
-    SimplePageStore pageStore = new DummyPageStore();
-
-    // Finally, construct the renderer.
-    _renderer = new HtmlRenderer(new LinkResolutionContext(linker, wikilinker, pageStore));
-  }
 
   public JiraRevikiRenderer(final RevikiPluginConfiguration pluginSettings, final RendererManager rendererManager) {
     _pluginSettings = pluginSettings;
