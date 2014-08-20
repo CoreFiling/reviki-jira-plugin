@@ -14,13 +14,10 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.base.Optional;
 
-import net.hillsdon.reviki.vc.PageInfo;
 import net.hillsdon.reviki.vc.SimplePageStore;
 import net.hillsdon.reviki.vc.impl.DummyPageStore;
-import net.hillsdon.reviki.vc.impl.PageInfoImpl;
 import net.hillsdon.reviki.web.urls.InterWikiLinker;
 import net.hillsdon.reviki.web.urls.InternalLinker;
-import net.hillsdon.reviki.web.urls.URLOutputFilter;
 import net.hillsdon.reviki.web.urls.SimpleWikiUrls;
 import net.hillsdon.reviki.wiki.renderer.HtmlRenderer;
 import net.hillsdon.reviki.wiki.renderer.creole.SimpleAnchors;
@@ -81,12 +78,8 @@ public final class JiraRevikiRenderer {
       contents = confluenceToReviki(text);
     }
 
-    // Then construct a dummy page, containing just the markup we want to
-    // render.
-    PageInfo page = new PageInfoImpl("", "", contents, Collections.<String, String> emptyMap());
-
     // Try rendering it, and return the original markup if we fail.
-    Optional<String> rendered = _renderer.render(page, URLOutputFilter.NULL);
+    Optional<String> rendered = _renderer.render(contents);
     return rendered.isPresent() ? rendered.get() : text;
   }
 
