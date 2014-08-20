@@ -24,7 +24,7 @@ public class WebConfig extends JiraWebActionSupport {
     Map params = ctx.getParametersImpl();
 
     // If the option is set, update the configuration.
-    _pluginSettings.put(JiraRevikiRenderer.CONFLUENCE_LINK_CONFIG_KEY, params.containsKey("convertConfluence"));
+    _pluginSettings.convertConfluenceLinks(params.containsKey("convertConfluence"));
 
     return SUCCESS;
   }
@@ -33,8 +33,7 @@ public class WebConfig extends JiraWebActionSupport {
    * Check if we're currently converting Confluence-style links.
    */
   public boolean isConverting() {
-    Object val = _pluginSettings.get(JiraRevikiRenderer.CONFLUENCE_LINK_CONFIG_KEY);
-    return val == null || ((Boolean) val).booleanValue();
+    return _pluginSettings.convertConfluenceLinks();
   }
 
   private static final long serialVersionUID = 1L;

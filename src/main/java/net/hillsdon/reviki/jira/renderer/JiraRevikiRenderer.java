@@ -35,8 +35,6 @@ import net.hillsdon.reviki.wiki.renderer.macro.Macro;
  * @author msw
  */
 public final class JiraRevikiRenderer {
-  public static final String CONFLUENCE_LINK_CONFIG_KEY = "convertConfluence";
-
   /** Match Confluence-style links in single square brackets. */
   private static final Pattern confluenceLinks = Pattern.compile("([^\\[]|^)(\\[[~@]*[^\\\\,\\[\\]]+?\\])([^\\]]|$)");
 
@@ -88,7 +86,7 @@ public final class JiraRevikiRenderer {
     String contents = text;
 
     // First fix any Confluence-style links for backwards-compatibility.
-    if (_pluginSettings.get(CONFLUENCE_LINK_CONFIG_KEY, Boolean.TRUE).booleanValue()) {
+    if (_pluginSettings.convertConfluenceLinks()) {
       contents = confluenceToReviki(text);
     }
 
