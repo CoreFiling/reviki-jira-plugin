@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
+import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.RendererManager;
 import com.atlassian.jira.issue.fields.renderer.IssueRenderContext;
 import com.google.common.base.Supplier;
@@ -30,7 +31,8 @@ public final class JiraRevikiRenderer {
   private static final String revikiReplacement = "$1[$2]$3";
 
   /** Render Reviki markup to HTML, complete with link handling. */
-  private static final HtmlRenderer _renderer = new HtmlRenderer(LinkResolutionContext.SIMPLE_LINKS.apply("/jira/browse"));
+  private static final String JIRA_PATH = ComponentAccessor.getApplicationProperties().getString("jira.baseurl");
+  private static final HtmlRenderer _renderer = new HtmlRenderer(LinkResolutionContext.SIMPLE_LINKS.apply(JIRA_PATH + "/browse"));
 
   /** Plugin configuration. */
   private final RevikiPluginConfiguration _pluginSettings;
