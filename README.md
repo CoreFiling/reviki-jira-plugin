@@ -28,14 +28,25 @@ the renderer jar,
 
 The plugin is now available at `target/reviki-renderer-1.0-SNAPSHOT.jar`.
 
-## Confluence-style Links
+## Integration with Confluence
 
-By default, this also renders Confleunce style
+### Confluence in Reviki
+
+By default, this also renders Confluence style
 `[single square brackets]` links, in addition to Reviki-style
 `[[double square brackets]]` links.
 
 In order to disable this behaviour, see the plugin configuration
 (accessible through the admin panel).
+
+### Reviki in Confluence
+
+This plugin also provides a Confluence macro, `{reviki}`, for
+rendering a block of markup with Reviki syntax, for example:
+
+    {reviki}**bold //italic --strike--//**{reviki}
+
+    Regular _Confluence_ markup.
 
 ## Licensing
 

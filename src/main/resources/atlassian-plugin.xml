@@ -12,6 +12,9 @@
   <component key="revikiPluginConfiguration"
              class="net.hillsdon.reviki.jira.renderer.RevikiPluginConfiguration" />
 
+  <component key="revikiRenderer"
+             class="net.hillsdon.reviki.jira.renderer.JiraRevikiRenderer" />
+
   <jira-renderer key="atlassian-jira-reviki-renderer"
                  name="Reviki Renderer"
                  class="net.hillsdon.reviki.jira.renderer.JiraRevikiRenderingPlugin">
@@ -36,4 +39,9 @@
       </action>
     </actions>
   </webwork1>
+
+  <macro key="reviki"
+         class="net.hillsdon.reviki.jira.renderer.JiraRevikiRenderingMacro">
+    <description>A wiki macro that will render Reviki content</description>
+  </macro>
 </atlassian-plugin>

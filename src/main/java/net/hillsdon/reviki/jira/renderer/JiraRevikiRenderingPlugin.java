@@ -12,11 +12,8 @@ public class JiraRevikiRenderingPlugin implements JiraRendererPlugin {
 
   private final JiraRevikiRenderer _renderer;
 
-  private final RevikiPluginConfiguration _pluginSettings;
-
-  public JiraRevikiRenderingPlugin(final RendererManager rendererManager, final RevikiPluginConfiguration pluginSettings) {
-    _pluginSettings = pluginSettings;
-    _renderer = new JiraRevikiRenderer(_pluginSettings, rendererManager);
+  public JiraRevikiRenderingPlugin(final RendererManager rendererManager, final JiraRevikiRenderer renderer) {
+    _renderer = renderer;
   }
 
   @Override
@@ -36,7 +33,7 @@ public class JiraRevikiRenderingPlugin implements JiraRendererPlugin {
 
   @Override
   public String render(final String text, final IssueRenderContext ctx) {
-    return _renderer.render(text, ctx);
+    return _renderer.render(text);
   }
 
   @Override

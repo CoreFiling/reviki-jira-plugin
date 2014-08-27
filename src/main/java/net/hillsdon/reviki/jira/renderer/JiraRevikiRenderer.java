@@ -1,18 +1,8 @@
 package net.hillsdon.reviki.jira.renderer;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Properties;
 import java.util.regex.Pattern;
 
 import com.atlassian.jira.component.ComponentAccessor;
-import com.atlassian.jira.issue.RendererManager;
-import com.atlassian.jira.issue.fields.renderer.IssueRenderContext;
-import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
 import com.google.common.base.Optional;
 
 import net.hillsdon.reviki.wiki.renderer.HtmlRenderer;
@@ -37,18 +27,14 @@ public final class JiraRevikiRenderer {
   /** Plugin configuration. */
   private final RevikiPluginConfiguration _pluginSettings;
 
-  /** Reference to the renderer manager. */
-  private final RendererManager _rendererManager;
-
-  public JiraRevikiRenderer(final RevikiPluginConfiguration pluginSettings, final RendererManager rendererManager) {
+  public JiraRevikiRenderer(final RevikiPluginConfiguration pluginSettings) {
     _pluginSettings = pluginSettings;
-    _rendererManager = rendererManager;
   }
 
   /**
    * Render some markup to HTML.
    */
-  public String render(final String text, final IssueRenderContext ctx) {
+  public String render(final String text) {
     String contents = text;
 
     // First fix any Confluence-style links for backwards-compatibility.
