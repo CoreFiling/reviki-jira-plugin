@@ -25,6 +25,15 @@ public class WebConfig extends JiraWebActionSupport {
     // If the option is set, update the configuration.
     _pluginSettings.convertConfluenceLinks(params.containsKey("convertConfluence"));
 
+    // Set the interwiki links
+    if (!params.containsKey("interWikiLinks") || params.get("interWikiLinks") == null) {
+      _pluginSettings.interWikiLinks("");
+    }
+    else {
+      String[] iwls = (String[]) params.get("interWikiLinks");
+      _pluginSettings.interWikiLinks(iwls[0]);
+    }
+
     return SUCCESS;
   }
 
@@ -33,6 +42,13 @@ public class WebConfig extends JiraWebActionSupport {
    */
   public boolean isConverting() {
     return _pluginSettings.convertConfluenceLinks();
+  }
+
+  /**
+   * Get the interwiki links as a string
+   */
+  public String interLinks() {
+    return _pluginSettings.interWikiLinksAsString();
   }
 
   private static final long serialVersionUID = 1L;

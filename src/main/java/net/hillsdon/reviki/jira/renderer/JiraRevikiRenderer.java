@@ -1,10 +1,16 @@
 package net.hillsdon.reviki.jira.renderer;
 
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import com.atlassian.jira.component.ComponentAccessor;
 import com.google.common.base.Optional;
 
+import net.hillsdon.reviki.vc.SimplePageStore;
+import net.hillsdon.reviki.vc.impl.DummyPageStore;
+import net.hillsdon.reviki.web.urls.InterWikiLinker;
+import net.hillsdon.reviki.web.urls.InternalLinker;
+import net.hillsdon.reviki.web.urls.SimpleWikiUrls;
 import net.hillsdon.reviki.wiki.renderer.HtmlRenderer;
 import net.hillsdon.reviki.wiki.renderer.creole.LinkResolutionContext;
 
@@ -23,8 +29,6 @@ public final class JiraRevikiRenderer {
   /** Render Reviki markup to HTML, complete with link handling. */
   private static final String JIRA_PATH = ComponentAccessor.getApplicationProperties().getString("jira.baseurl");
 
-  private static final HtmlRenderer _renderer = new HtmlRenderer(LinkResolutionContext.SIMPLE_LINKS.apply(JIRA_PATH + "/browse"));
-
   /** Plugin configuration. */
   private final RevikiPluginConfiguration _pluginSettings;
 
@@ -40,6 +44,8 @@ public final class JiraRevikiRenderer {
       return "";
     }
 
+    HtmlRenderer renderer = makeRendererWith(_pluginSettings.interWikiLinks());
+
     String contents = text;
 
     // First fix any Confluence-style links for backwards-compatibility.
@@ -49,7 +55,7 @@ public final class JiraRevikiRenderer {
 
     // Try rendering it, and return the original markup if we fail.
     String out = text;
-    Optional<String> rendered = _renderer.render(contents);
+    Optional<String> rendered = renderer.render(contents);
     if (rendered.isPresent()) {
       // Use Confluence styling on the tables.
       out = rendered.get();
@@ -79,5 +85,26 @@ public final class JiraRevikiRenderer {
 
     String first = confluenceLinks.matcher(text).replaceAll(revikiReplacement);
     return confluenceLinks.matcher(first).replaceAll(revikiReplacement);
+  }
+
+  /**
+   * Construct a renderer with the given interwiki links.
+   */
+  private static HtmlRenderer makeRendererWith(final Map<String, String> interWikilinks) {
+    // Have all internal relative links start from the browse directory.
+    SimpleWikiUrls wikiUrls = SimpleWikiUrls.RELATIVE_TO.apply(JIRA_PATH + "/browse");
+    InternalLinker linker = new InternalLinker(wikiUrls);
+
+    // Add the known wikis
+    InterWikiLinker wikilinker = new InterWikiLinker();
+
+    for (String prefix : interWikilinks.keySet()) {
+      wikilinker.addWiki(prefix, interWikilinks.get(prefix));
+    }
+
+    // We don't know of any other pages.
+    SimplePageStore pageStore = new DummyPageStore();
+
+    return new HtmlRenderer(new LinkResolutionContext(linker, wikilinker, pageStore));
   }
 }

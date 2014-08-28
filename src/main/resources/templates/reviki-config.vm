@@ -30,6 +30,13 @@
                           </td>
                         </tr>
                         <tr>
+                          <td class="fieldLabelArea">Inter-wiki links</td>
+                          <td class="fieldValueArea">
+                            <textarea name="interWikiLinks" style="height: 200px; width:100%">$textutils.htmlEncode($interLinks)</textarea>
+                            <div class="fieldDescription">Inter-wiki links to use. Specify in the form &quot;prefix url&quot;, one per line, where &quot;%s&quot; in the target will be replaced with the link target.</div>
+                          </td>
+                        </tr>
+                        <tr>
                           <td colspan="2">
                             <input type="submit" value="Save Settings">
                           </td>
