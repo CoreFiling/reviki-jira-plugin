@@ -22,6 +22,7 @@ public final class JiraRevikiRenderer {
 
   /** Render Reviki markup to HTML, complete with link handling. */
   private static final String JIRA_PATH = ComponentAccessor.getApplicationProperties().getString("jira.baseurl");
+
   private static final HtmlRenderer _renderer = new HtmlRenderer(LinkResolutionContext.SIMPLE_LINKS.apply(JIRA_PATH + "/browse"));
 
   /** Plugin configuration. */
@@ -35,6 +36,10 @@ public final class JiraRevikiRenderer {
    * Render some markup to HTML.
    */
   public String render(final String text) {
+    if (text == null) {
+      return "";
+    }
+
     String contents = text;
 
     // First fix any Confluence-style links for backwards-compatibility.
