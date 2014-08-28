@@ -48,8 +48,17 @@ public final class JiraRevikiRenderer {
     }
 
     // Try rendering it, and return the original markup if we fail.
+    String out = text;
     Optional<String> rendered = _renderer.render(contents);
-    return rendered.isPresent() ? rendered.get() : text;
+    if (rendered.isPresent()) {
+      // Use Confluence styling on the tables.
+      out = rendered.get();
+      out = out.replace("<table " + HtmlRenderer.CSS_CLASS_ATTR, "<table class=\"confluenceTable\"");
+      out = out.replace("<th " + HtmlRenderer.CSS_CLASS_ATTR, "<th class=\"confluenceTh\"");
+      out = out.replace("<td " + HtmlRenderer.CSS_CLASS_ATTR, "<td class=\"confluenceTd\"");
+    }
+
+    return out;
   }
 
   /**
