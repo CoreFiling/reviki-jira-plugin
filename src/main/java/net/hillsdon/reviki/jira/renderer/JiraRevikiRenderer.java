@@ -15,7 +15,7 @@ import net.hillsdon.reviki.wiki.renderer.creole.LinkResolutionContext;
  */
 public final class JiraRevikiRenderer {
   /** Match Confluence-style links in single square brackets. */
-  private static final Pattern confluenceLinks = Pattern.compile("([^\\[]|^)(\\[[~@]*[^\\\\,\\[\\]]+?\\])([^\\]]|$)");
+  private static final Pattern confluenceLinks = Pattern.compile("([^\\[]|^)(\\[[~@]*[^\\\\,\\[\\]<>]+?\\])([^\\]]|$)");
 
   /** Replacement text to turn Confluence-style links into Reviki-style links. */
   private static final String revikiReplacement = "$1[$2]$3";
