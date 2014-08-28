@@ -2,27 +2,36 @@
   <input class="textfield text long-field#if($class) $class#end" id="$fieldId" name="$fieldId"
     #if($maxlength)maxlength="$maxlength"#end type="text" value="$textutils.htmlEncode($!value)"/>
 #else
-<div>
-  <div class="wmd-panel">
-    <div id="wmd-button-bar-$fieldId"></div>
-      <textarea #if($accesskey)accesskey="$accesskey"#end
-                class="wmd-input textarea long-field#if($class) $class#end#if($mentionable) mentionable#end"
-                id="wmd-input-$fieldId"
-                data-id-postfix="$fieldId"
-                name="$fieldId"
-                #if($cols)cols="$cols"#end
-                #if($rows)rows="$rows"#end
-                #if($data-projectkey)data-projectkey="$data-projectkey"#end
-                #if($data-issuekey)data-issuekey="$data-issuekey"#end>
-$textutils.htmlEncode($!value)</textarea>
-    </div>
-
-  <div class="field-tools">
-    <a class="wmd-preview-button fullscreen selected" href="#" id="wmd-preview-button-${fieldId}" title="preview">preview</a>
-    <a class="wmd-preview-button help-icon" id="wmd-help-button-${fieldId}" title="markdown help">markdown help</a>
+<div class="wiki-edit">
+  <div style="height: 300px; display: none;">&nbsp;</div>
+  <div id="${fieldId}-wiki-edit" class="wiki-edit-content">
+    <textarea #if($accesskey)accesskey="$accesskey"#end
+              style="display: inline;"
+              class="textarea long-field wiki-textfield long-field mentionable"
+              id="${fieldId}"
+              name="${fieldId}"
+              #if($cols)cols="$cols"#end
+              #if($rows)rows="$rows"#end
+              #if($data-projectkey)data-projectkey="$data-projectkey"#end
+              #if($data-issuekey)data-issuekey="$data-issuekey"#end
+              wrap="virtual"
+            >$textutils.htmlEncode($!value)</textarea>
+    <div class="content-inner"></div>
   </div>
-  <div id="wmd-preview-container-$fieldId" class="wmd-preview-container selected">
-    <div id="wmd-preview-$fieldId" class="wmd-panel wmd-preview"></div>
-  </div>
+</div>
+<div class="field-tools">
+  <dl id="wiki-prefs" class="wiki-js-prefs" style="display:none">
+      <dt>trigger</dt>
+      <dd>${fieldId}-preview_link</dd>
+      <dt>fieldId</dt>
+      <dd>$!fieldId</dd>
+      <dt>fieldName</dt>
+      <dd>$textutils.htmlEncode($!fieldName)</dd>
+      <dt>rendererType</dt>
+      <dd>$!rendererType</dd>
+      <dt>issueKey</dt>
+      <dd>$!issueKey</dd>
+  </dl>
+  <a class="fullscreen" href="#" id="${fieldId}-preview_link" title="preview"><span class="aui-icon wiki-renderer-icon"></span></a>
 </div>
 #end
