@@ -15,7 +15,7 @@ public class JiraRevikiRenderingMacro extends BaseMacro {
   }
 
   public boolean isInline() {
-    return true;
+    return false;
   }
 
   public boolean hasBody() {

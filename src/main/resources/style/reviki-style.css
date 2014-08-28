@@ -1,9 +1,17 @@
-code.wiki-content {
-  font-size: 90%;
-  color: inherit;
-  background-color: inherit;
-  white-space: nowrap;
+div.reviki pre.wiki-content {
+  max-height: 30em;
+  overflow: auto;
+  whitespace: pre-wrap;
+  word-wrap: normal;
+  margin: 10px 0 0;
+  font-size: 12px;
+  line-height: 1.333333;
   font-family: monospace;
+  padding: 9px 12px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background-color: #f5f5f5;
+  width: auto;
 }
 
 /*
