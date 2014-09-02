@@ -5,8 +5,7 @@ tmpdir=`mktemp -d`
 # Build the renderer jar
 pushd $tmpdir
 
-git clone https://github.com/barrucadu/reviki .
-git checkout split-jars
+git clone https://github.com/CoreFiling/reviki .
 
 ant renderer-jar
 
