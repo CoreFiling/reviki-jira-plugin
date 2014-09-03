@@ -1,5 +1,7 @@
 package net.hillsdon.reviki.jira.renderer;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -11,6 +13,7 @@ import net.hillsdon.reviki.vc.impl.DummyPageStore;
 import net.hillsdon.reviki.web.urls.InterWikiLinker;
 import net.hillsdon.reviki.web.urls.InternalLinker;
 import net.hillsdon.reviki.web.urls.SimpleWikiUrls;
+import net.hillsdon.reviki.web.urls.UnknownWikiException;
 import net.hillsdon.reviki.wiki.renderer.HtmlRenderer;
 import net.hillsdon.reviki.wiki.renderer.creole.LinkResolutionContext;
 
@@ -88,12 +91,32 @@ public final class JiraRevikiRenderer {
   }
 
   /**
+   * Links to WikiWords make no sense in JIRA.
+   * You can link to issues: NAME-12345
+   * Check for the presence of '-' in the name?  Crude but effective?
+   */
+  private static class JiraInternalLinker extends InternalLinker {
+    public JiraInternalLinker(final SimpleWikiUrls urls) {
+      super(urls);
+    }
+
+    public URI uri(final String pageName) throws UnknownWikiException, URISyntaxException {
+      if (pageName.contains("-")) {
+        return super.uri(pageName);
+      }
+      else {
+        return null;
+      }
+    }
+  }
+
+  /**
    * Construct a renderer with the given interwiki links.
    */
   private static HtmlRenderer makeRendererWith(final Map<String, String> interWikilinks) {
     // Have all internal relative links start from the browse directory.
     SimpleWikiUrls wikiUrls = SimpleWikiUrls.RELATIVE_TO.apply(JIRA_PATH + "/browse");
-    InternalLinker linker = new InternalLinker(wikiUrls);
+    InternalLinker linker = new JiraInternalLinker(wikiUrls);
 
     // Add the known wikis
     InterWikiLinker wikilinker = new InterWikiLinker();
