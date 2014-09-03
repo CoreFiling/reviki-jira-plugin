@@ -2,7 +2,7 @@
   <plugin-info>
     <description>${project.description}</description>
     <version>${project.version}</version>
-    <vendor name="${project.organization.name}" url="${project.organization.url}" />
+    <vendor name="CoreFiling" url="http://www.corefiling.com/" />
     <param name="configure.url">/secure/admin/configureRevikiPlugin.jspa</param>
   </plugin-info>
 
