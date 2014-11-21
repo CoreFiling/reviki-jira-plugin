@@ -17,13 +17,16 @@ popd
 tmppom=`mktemp`
 mv pom.xml $tmppom
 
-mvn install:install-file -DlocalRepositoryPath=repo \
+RENDERER_JAR=$tmpdir/ant-build/web/WEB-INF/lib/reviki-renderer.jar
+VERSION=`unzip -p $RENDERER_JAR META-INF/MANIFEST.MF | sed -n 's/^Implementation-Version: \([^ ]*\) .*/\1/p'`
+
+atlas-mvn install:install-file -DlocalRepositoryPath=repo \
                          -DcreateChecksum=true \
                          -Dpackaging=jar \
-                         -Dfile=$tmpdir/ant-build/web/WEB-INF/lib/reviki-renderer.jar \
+                         -Dfile=$RENDERER_JAR \
                          -DgroupId=net.hillsdon.reviki \
                          -DartifactId=reviki-renderer \
-                         -Dversion=1.0.0
+                         -Dversion=$VERSION
 
 mv $tmppom pom.xml
 
