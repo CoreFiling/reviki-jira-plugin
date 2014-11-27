@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.google.common.base.Optional;
 
+import net.hillsdon.reviki.web.urls.Configuration;
 import net.hillsdon.reviki.vc.SimplePageStore;
 import net.hillsdon.reviki.vc.impl.DummyPageStore;
 import net.hillsdon.reviki.web.urls.InterWikiLinker;
@@ -110,6 +111,18 @@ public final class JiraRevikiRenderer {
     }
   }
 
+  private static class JiraWikiConfiguration implements Configuration {
+    private final InterWikiLinker _wikilinker;
+
+    public JiraWikiConfiguration(final InterWikiLinker wikilinker) {
+      _wikilinker = wikilinker;
+    }
+
+    public InterWikiLinker getInterWikiLinker() {
+      return _wikilinker;
+    }
+  }
+
   /**
    * Construct a renderer with the given interwiki links.
    */
@@ -126,8 +139,8 @@ public final class JiraRevikiRenderer {
     }
 
     // We don't know of any other pages.
-    SimplePageStore pageStore = new DummyPageStore();
+    SimplePageStore pageStore = new DummyStore();
 
-    return new HtmlRenderer(new LinkResolutionContext(linker, wikilinker, pageStore));
+    return new HtmlRenderer(new LinkResolutionContext(linker, wikilinker, new JiraWikiConfiguration(wikilinker), pageStore));
   }
 }
