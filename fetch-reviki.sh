@@ -28,6 +28,8 @@ atlas-mvn install:install-file -DlocalRepositoryPath=repo \
                          -DartifactId=reviki-renderer \
                          -Dversion=$VERSION
 
+cp repo/net/hillsdon/reviki/reviki-renderer/maven-metadata-local.xml repo/net/hillsdon/reviki/reviki-renderer/maven-metadata.xml
+
 mv $tmppom pom.xml
 
 # Clean up

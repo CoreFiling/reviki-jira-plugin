@@ -139,7 +139,7 @@ public final class JiraRevikiRenderer {
     }
 
     // We don't know of any other pages.
-    SimplePageStore pageStore = new DummyStore();
+    SimplePageStore pageStore = new DummyPageStore();
 
     return new HtmlRenderer(new LinkResolutionContext(linker, wikilinker, new JiraWikiConfiguration(wikilinker), pageStore));
   }

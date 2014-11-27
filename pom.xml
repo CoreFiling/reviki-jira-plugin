@@ -16,8 +16,18 @@
 
     <repositories>
         <repository>
-            <id>repo</id>
+            <id>local</id>
             <url>file://${project.basedir}/repo</url>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </snapshots>
         </repository>
     </repositories>
 
@@ -48,7 +58,7 @@
 		<dependency>
 			<groupId>net.hillsdon.reviki</groupId>
 			<artifactId>reviki-renderer</artifactId>
-			<version>1.0.0</version>
+			<version>LATEST</version>
 		</dependency>
     </dependencies>
 
