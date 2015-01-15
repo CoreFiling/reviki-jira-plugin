@@ -47,7 +47,11 @@ public class JiraRevikiRenderingPlugin implements JiraRendererPlugin {
         for (String name : names) {
           String macro = "{" + name + "}";
           if (text.startsWith(macro)) {
-            return p.render(text.replace(macro, ""), ctx);
+            String trimmedText = text.substring(macro.length()).trim();
+            if (trimmedText.endsWith(macro)) {
+              trimmedText = trimmedText.substring(0, trimmedText.length() - macro.length());
+            }
+            return p.render(trimmedText, ctx);
           }
         }
       }
