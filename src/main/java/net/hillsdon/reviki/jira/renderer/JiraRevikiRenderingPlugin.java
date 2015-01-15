@@ -11,9 +11,11 @@ public class JiraRevikiRenderingPlugin implements JiraRendererPlugin {
   private JiraRendererModuleDescriptor _jiraRendererModuleDescriptor;
 
   private final JiraRevikiRenderer _renderer;
+  private final RendererManager _rendererManager;
 
   public JiraRevikiRenderingPlugin(final RendererManager rendererManager, final JiraRevikiRenderer renderer) {
     _renderer = renderer;
+    _rendererManager = rendererManager;
   }
 
   @Override
@@ -33,6 +35,23 @@ public class JiraRevikiRenderingPlugin implements JiraRendererPlugin {
 
   @Override
   public String render(final String text, final IssueRenderContext ctx) {
+    if (text.startsWith("{")) {
+      for (JiraRendererPlugin p : _rendererManager.getAllActiveRenderers()) {
+        String[] names;
+        if ("atlassian-wiki-renderer".equals(p.getRendererType())) {
+          names = new String[]{p.getRendererType(), "jira"};
+        }
+        else {
+          names = new String[]{p.getRendererType()};
+        }
+        for (String name : names) {
+          String macro = "{" + name + "}";
+          if (text.startsWith(macro)) {
+            return p.render(text.replace(macro, ""), ctx);
+          }
+        }
+      }
+    }
     return _renderer.render(text);
   }
 
