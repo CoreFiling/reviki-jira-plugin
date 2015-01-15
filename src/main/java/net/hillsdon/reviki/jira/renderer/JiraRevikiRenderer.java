@@ -97,12 +97,19 @@ public final class JiraRevikiRenderer {
    * Check for the presence of '-' in the name?  Crude but effective?
    */
   private static class JiraInternalLinker extends InternalLinker {
-    public JiraInternalLinker(final SimpleWikiUrls urls) {
+    private final String _userUrlBase;
+
+    public JiraInternalLinker(final SimpleWikiUrls urls, final String userUrlBase) {
       super(urls);
+
+      _userUrlBase = userUrlBase;
     }
 
     public URI uri(final String pageName) throws UnknownWikiException, URISyntaxException {
-      if (pageName.contains("-")) {
+      if (pageName.startsWith("~")) {
+        return new URI(_userUrlBase + pageName.substring(1));
+      }
+      else if (pageName.contains("-")) {
         return super.uri(pageName);
       }
       else {
@@ -129,7 +136,8 @@ public final class JiraRevikiRenderer {
   private static HtmlRenderer makeRendererWith(final Map<String, String> interWikilinks) {
     // Have all internal relative links start from the browse directory.
     SimpleWikiUrls wikiUrls = SimpleWikiUrls.RELATIVE_TO.apply(JIRA_PATH + "/browse");
-    InternalLinker linker = new JiraInternalLinker(wikiUrls);
+    String userUrlBase = JIRA_PATH + "/secure/ViewProfile.jspa?name="; // SimpleWikiUrls is too magic WRT the query parameters
+    InternalLinker linker = new JiraInternalLinker(wikiUrls, userUrlBase);
 
     // Add the known wikis
     InterWikiLinker wikilinker = new InterWikiLinker();
