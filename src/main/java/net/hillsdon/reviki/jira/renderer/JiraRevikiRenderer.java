@@ -24,11 +24,11 @@ import net.hillsdon.reviki.wiki.renderer.creole.LinkResolutionContext;
  * @author msw
  */
 public final class JiraRevikiRenderer {
-  /** Match Confluence-style links in single square brackets. */
-  private static final Pattern confluenceLinks = Pattern.compile("([^\\[]|^)(\\[[~@]*[^\\\\,\\[\\]<>]+?\\])([^\\]]|$)");
+  /** Match Confluence-style links in single square brackets.*/
+  private static final Pattern confluenceLinks = Pattern.compile("([^\\[]|^)\\[([^\\\\,\\[\\]<>|]+)(?:(\\|)([^\\\\,\\[\\]<>]+))?\\]([^\\]]|$)");
 
   /** Replacement text to turn Confluence-style links into Reviki-style links. */
-  private static final String revikiReplacement = "$1[$2]$3";
+  private static final String revikiReplacement = "$1[[$4$3$2]]$5";
 
   /** Render Reviki markup to HTML, complete with link handling. */
   private static final String JIRA_PATH = ComponentAccessor.getApplicationProperties().getString("jira.baseurl");
