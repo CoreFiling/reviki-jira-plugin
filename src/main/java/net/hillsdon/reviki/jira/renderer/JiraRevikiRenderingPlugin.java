@@ -6,7 +6,7 @@ import com.atlassian.jira.issue.fields.renderer.JiraRendererPlugin;
 import com.atlassian.jira.plugin.renderer.JiraRendererModuleDescriptor;
 
 public class JiraRevikiRenderingPlugin implements JiraRendererPlugin {
-  public static final String RENDERER_TYPE = "atlassian-jira-reviki-renderer";
+  public static final String RENDERER_TYPE = "reviki-renderer";
 
   private JiraRendererModuleDescriptor _jiraRendererModuleDescriptor;
 
@@ -40,6 +40,9 @@ public class JiraRevikiRenderingPlugin implements JiraRendererPlugin {
         String[] names;
         if ("atlassian-wiki-renderer".equals(p.getRendererType())) {
           names = new String[]{p.getRendererType(), "jira"};
+        }
+        else if (RENDERER_TYPE.equals(p.getRendererType())) {
+          names = new String[]{p.getRendererType(), "reviki"};
         }
         else {
           names = new String[]{p.getRendererType()};

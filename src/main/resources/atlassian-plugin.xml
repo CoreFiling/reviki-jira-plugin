@@ -15,7 +15,7 @@
   <component key="revikiRenderer"
              class="net.hillsdon.reviki.jira.renderer.JiraRevikiRenderer" />
 
-  <jira-renderer key="atlassian-jira-reviki-renderer"
+  <jira-renderer key="reviki-renderer"
                  name="Reviki Renderer"
                  class="net.hillsdon.reviki.jira.renderer.JiraRevikiRenderingPlugin">
     <description>A field renderer that will render Reviki content</description>
