@@ -4,7 +4,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
+import com.atlassian.jira.bc.issue.IssueService;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.google.common.base.Optional;
 
@@ -25,10 +27,13 @@ import net.hillsdon.reviki.wiki.renderer.creole.LinkResolutionContext;
  */
 public final class JiraRevikiRenderer {
   /** Match Confluence-style links in single square brackets.*/
-  private static final Pattern confluenceLinks = Pattern.compile("([^\\[]|^)\\[([^\\\\,\\[\\]<>|]+)(?:(\\|)([^\\\\,\\[\\]<>]+))?\\]([^\\]]|$)");
+  private static final Pattern confluenceLinks = Pattern.compile("(?<!\\[)\\[([^\\\\,\\[\\]<>|]+)(?:(\\|)([^\\\\,\\[\\]<>]+))?\\](?!\\])");
 
   /** Replacement text to turn Confluence-style links into Reviki-style links. */
-  private static final String revikiReplacement = "$1[[$4$3$2]]$5";
+  private static final String revikiReplacement = "[[$3$2$1]]";
+
+  /** Match issue IDs not in any form of brackets.  JIRA actually works with 99ISSUE-1234AA. */
+  private static final Pattern issueLinks = Pattern.compile("(?<![A-Za-z\\[])([A-Z]+-[0-9]+)(?![0-9])");
 
   /** Render Reviki markup to HTML, complete with link handling. */
   private static final String JIRA_PATH = ComponentAccessor.getApplicationProperties().getString("jira.baseurl");
@@ -82,13 +87,24 @@ public final class JiraRevikiRenderer {
    * ("[[FOO-1]]"), this allows backwards compatibility in linking to issues.
    */
   private static String confluenceToReviki(final String text) {
-    // Need to run the regex twice because of overlapping matches.
-    //
-    // eg: "[FOO-1] [FOO-1] [FOO-1]" - just replacing once results in
-    // "[[FOO-1]] [FOO-1] [[FOO-1]]"
+    String newText = confluenceLinks.matcher(text).replaceAll(revikiReplacement);
 
-    String first = confluenceLinks.matcher(text).replaceAll(revikiReplacement);
-    return confluenceLinks.matcher(first).replaceAll(revikiReplacement);
+    IssueService issueService = ComponentAccessor.getIssueService();
+    // We could get an IssueManager from the ComponentAccessor, then we can simply call isExistingIssueKey but that is fairly new and marked experimental
+
+    StringBuffer sb = new StringBuffer();
+    Matcher issueMatch = issueLinks.matcher(newText);
+    while (issueMatch.find()) {
+      String issueKey = issueMatch.group(1);
+      if (issueService.getIssue(ComponentAccessor.getJiraAuthenticationContext().getLoggedInUser(), issueKey).isValid()) {
+        issueMatch.appendReplacement(sb, "[[$1]]");
+      }
+      else {
+        issueMatch.appendReplacement(sb, "$1");
+      }
+    }
+    issueMatch.appendTail(sb);
+    return sb.toString();
   }
 
   /**
