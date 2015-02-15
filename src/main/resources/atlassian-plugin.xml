@@ -44,4 +44,9 @@
          class="net.hillsdon.reviki.jira.renderer.JiraRevikiRenderingMacro">
     <description>A wiki macro that will render Reviki content</description>
   </macro>
+
+  <macro key="jira"
+         class="net.hillsdon.reviki.jira.renderer.JiraJiraRenderingMacro">
+    <description>A no-op macro that will allow {jira} blocks to work even when the JIRA renderer is already being used</description>
+  </macro>
 </atlassian-plugin>
