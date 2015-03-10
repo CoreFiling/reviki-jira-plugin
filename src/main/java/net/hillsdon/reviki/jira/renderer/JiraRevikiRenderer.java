@@ -2,13 +2,15 @@ package net.hillsdon.reviki.jira.renderer;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 
 import com.atlassian.jira.bc.issue.IssueService;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.google.common.base.Optional;
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
 
 import net.hillsdon.reviki.web.urls.Configuration;
 import net.hillsdon.reviki.vc.SimplePageStore;
@@ -18,7 +20,11 @@ import net.hillsdon.reviki.web.urls.InternalLinker;
 import net.hillsdon.reviki.web.urls.SimpleWikiUrls;
 import net.hillsdon.reviki.web.urls.UnknownWikiException;
 import net.hillsdon.reviki.wiki.renderer.HtmlRenderer;
+import net.hillsdon.reviki.wiki.renderer.creole.LinkPartsHandler;
 import net.hillsdon.reviki.wiki.renderer.creole.LinkResolutionContext;
+import net.hillsdon.reviki.wiki.renderer.creole.SimpleAnchors;
+import net.hillsdon.reviki.wiki.renderer.creole.SimpleImages;
+import net.hillsdon.reviki.wiki.renderer.macro.Macro;
 
 /**
  * A simple interface to Reviki's HTML rendering capabilities.
@@ -26,15 +32,6 @@ import net.hillsdon.reviki.wiki.renderer.creole.LinkResolutionContext;
  * @author msw
  */
 public final class JiraRevikiRenderer {
-  /** Match Confluence-style links in single square brackets.*/
-  private static final Pattern confluenceLinks = Pattern.compile("(?<!\\[)\\[([^\\\\,\\[\\]<>|]+)(?:(\\|)([^\\\\,\\[\\]<>]+))?\\](?!\\])");
-
-  /** Replacement text to turn Confluence-style links into Reviki-style links. */
-  private static final String revikiReplacement = "[[$3$2$1]]";
-
-  /** Match issue IDs not in any form of brackets.  JIRA actually works with 99ISSUE-1234AA. */
-  private static final Pattern issueLinks = Pattern.compile("(?<![A-Za-z\\[])([A-Z]+-[0-9]+)(?![0-9])");
-
   /** Render Reviki markup to HTML, complete with link handling. */
   private static final String JIRA_PATH = ComponentAccessor.getApplicationProperties().getString("jira.baseurl");
 
@@ -57,11 +54,6 @@ public final class JiraRevikiRenderer {
 
     String contents = text;
 
-    // First fix any Confluence-style links for backwards-compatibility.
-    if (_pluginSettings.convertConfluenceLinks()) {
-      contents = confluenceToReviki(text);
-    }
-
     // Try rendering it, and return the original markup if we fail.
     String out = text;
     Optional<String> rendered = renderer.render(contents);
@@ -83,34 +75,8 @@ public final class JiraRevikiRenderer {
   }
 
   /**
-   * Convert Confluence-style links ("[FOO-1]") to Reviki-style links
-   * ("[[FOO-1]]"), this allows backwards compatibility in linking to issues.
-   */
-  private static String confluenceToReviki(final String text) {
-    String newText = confluenceLinks.matcher(text).replaceAll(revikiReplacement);
-
-    IssueService issueService = ComponentAccessor.getIssueService();
-    // We could get an IssueManager from the ComponentAccessor, then we can simply call isExistingIssueKey but that is fairly new and marked experimental
-
-    StringBuffer sb = new StringBuffer();
-    Matcher issueMatch = issueLinks.matcher(newText);
-    while (issueMatch.find()) {
-      String issueKey = issueMatch.group(1);
-      if (issueService.getIssue(ComponentAccessor.getJiraAuthenticationContext().getLoggedInUser(), issueKey).isValid()) {
-        issueMatch.appendReplacement(sb, "[[$1]]");
-      }
-      else {
-        issueMatch.appendReplacement(sb, "$1");
-      }
-    }
-    issueMatch.appendTail(sb);
-    return sb.toString();
-  }
-
-  /**
    * Links to WikiWords make no sense in JIRA.
    * You can link to issues: NAME-12345
-   * Check for the presence of '-' in the name?  Crude but effective?
    */
   private static class JiraInternalLinker extends InternalLinker {
     private final String _userUrlBase;
@@ -125,12 +91,19 @@ public final class JiraRevikiRenderer {
       if (pageName.startsWith("~")) {
         return new URI(_userUrlBase + pageName.substring(1));
       }
-      else if (pageName.contains("-")) {
+      else if (isJiraIssue(pageName)) {
         return super.uri(pageName);
       }
       else {
         return null;
       }
+    }
+
+    private static boolean isJiraIssue(final String issueLink) {
+      IssueService issueService = ComponentAccessor.getIssueService();
+      // We could get an IssueManager from the ComponentAccessor, then we can simply
+      // call isExistingIssueKey but that is fairly new and marked experimental
+      return issueService.getIssue(ComponentAccessor.getJiraAuthenticationContext().getLoggedInUser(), issueLink).isValid();
     }
   }
 
@@ -165,6 +138,16 @@ public final class JiraRevikiRenderer {
     // We don't know of any other pages.
     SimplePageStore pageStore = new DummyPageStore();
 
-    return new HtmlRenderer(new LinkResolutionContext(linker, wikilinker, new JiraWikiConfiguration(wikilinker), pageStore));
+    // Construct the JIRA-aware link handler for internal links
+    LinkResolutionContext lrc = new LinkResolutionContext(linker, wikilinker, new JiraWikiConfiguration(wikilinker), pageStore);
+    LinkPartsHandler internalLinks = new JiraLinkHandler(SimpleAnchors.ANCHOR, lrc);
+
+    // Image links are unused?
+    LinkPartsHandler imageLinks = new SimpleImages(lrc);
+
+    // Macros are unused
+    Supplier<List<Macro>> macros = Suppliers.ofInstance((List<Macro>) new ArrayList<Macro>());
+
+    return new HtmlRenderer(pageStore, internalLinks, imageLinks, macros);
   }
 }
