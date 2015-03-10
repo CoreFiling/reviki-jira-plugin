@@ -148,6 +148,6 @@ public final class JiraRevikiRenderer {
     // Macros are unused
     Supplier<List<Macro>> macros = Suppliers.ofInstance((List<Macro>) new ArrayList<Macro>());
 
-    return new HtmlRenderer(pageStore, internalLinks, imageLinks, macros);
+    return new JiraHtmlRenderer(pageStore, internalLinks, imageLinks, macros);
   }
 }
