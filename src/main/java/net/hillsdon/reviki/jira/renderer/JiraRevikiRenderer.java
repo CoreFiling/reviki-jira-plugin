@@ -50,7 +50,7 @@ public final class JiraRevikiRenderer {
       return "";
     }
 
-    HtmlRenderer renderer = makeRendererWith(_pluginSettings.interWikiLinks());
+    HtmlRenderer renderer = makeRendererWith(_pluginSettings.interWikiLinks(), _pluginSettings.convertConfluenceLinks());
 
     String contents = text;
 
@@ -122,7 +122,7 @@ public final class JiraRevikiRenderer {
   /**
    * Construct a renderer with the given interwiki links.
    */
-  private static HtmlRenderer makeRendererWith(final Map<String, String> interWikilinks) {
+  private static HtmlRenderer makeRendererWith(final Map<String, String> interWikilinks, final boolean jiraStyleLinks) {
     // Have all internal relative links start from the browse directory.
     SimpleWikiUrls wikiUrls = SimpleWikiUrls.RELATIVE_TO.apply(JIRA_PATH + "/browse");
     String userUrlBase = JIRA_PATH + "/secure/ViewProfile.jspa?name="; // SimpleWikiUrls is too magic WRT the query parameters
@@ -148,6 +148,6 @@ public final class JiraRevikiRenderer {
     // Macros are unused
     Supplier<List<Macro>> macros = Suppliers.ofInstance((List<Macro>) new ArrayList<Macro>());
 
-    return new JiraHtmlRenderer(pageStore, internalLinks, imageLinks, macros);
+    return new JiraHtmlRenderer(pageStore, internalLinks, imageLinks, macros, jiraStyleLinks);
   }
 }

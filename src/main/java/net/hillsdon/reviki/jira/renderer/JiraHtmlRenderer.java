@@ -14,16 +14,18 @@ import net.hillsdon.reviki.wiki.renderer.creole.ast.ASTNode;
 import net.hillsdon.reviki.wiki.renderer.macro.Macro;
 
 public class JiraHtmlRenderer extends HtmlRenderer {
+  private final boolean _jiraStyleLinks;
 
-  public JiraHtmlRenderer(SimplePageStore pageStore, LinkPartsHandler linkHandler, LinkPartsHandler imageHandler, Supplier<List<Macro>> macros) {
+  public JiraHtmlRenderer(final SimplePageStore pageStore, final LinkPartsHandler linkHandler, final LinkPartsHandler imageHandler, final Supplier<List<Macro>> macros, final boolean jiraStyleLinks) {
     super(pageStore, linkHandler, imageHandler, macros);
+    _jiraStyleLinks = jiraStyleLinks;
   }
 
   @Override
   public ASTNode parse(final PageInfo page) {
     _page = page;
-    // Use JIRA style links
-    CreoleTokens lexer = new CreoleTokens(null, true);
+    // Use JIRA style links where requested
+    CreoleTokens lexer = new CreoleTokens(null, _jiraStyleLinks);
     return CreoleRenderer.renderWithLexer(getVisitor(_page), lexer, _macros);
   }
 }
