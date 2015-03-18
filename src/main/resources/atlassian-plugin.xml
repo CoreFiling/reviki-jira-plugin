@@ -26,6 +26,14 @@
     <context>jira.general</context>
     <resource type="download" name="reviki-style.css" location="style/reviki-style.css"/>
   </web-resource>
+  
+  <web-resource key="atlassian-jira-reviki-highlight-js" name = "Jira Reviki Renderer Code Highlight JS">
+    <context>jira.general</context>
+    <resource type="download" name="reviki-highlight-default.css" location="style/reviki-highlight-default.css"/>
+    <resource type="download" name="reviki-highlight-custom.css" location="style/reviki-highlight-custom.css"/>
+    <resource type="download" name="reviki-highlight.pack.js" location="js/reviki-highlight.pack.js"/>
+    <resource type="download" name="reviki-highlight.js" location="js/reviki-highlight.js"/>
+  </web-resource>
 
   <webwork1 key="atlassian-jira-reviki-config"
             name="Jira Reviki Renderer Configuration"
