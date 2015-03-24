@@ -33,5 +33,6 @@
       <dd>$!issueKey</dd>
   </dl>
   <a class="fullscreen" href="#" id="${fieldId}-preview_link" title="preview"><span class="aui-icon wiki-renderer-icon"></span></a>
+  <a class="reviki-preview-button help-icon aui-icon" id="reviki-help-button-${fieldId}" title="reviki help"></a>
 </div>
 #end
