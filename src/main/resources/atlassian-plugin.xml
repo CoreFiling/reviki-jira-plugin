@@ -22,6 +22,11 @@
     <resource type="velocity" name="edit" location="templates/reviki-edit.vm"/>
   </jira-renderer>
 
+  <web-resource key="atlassian-jira-reviki-help" name="Jira Reviki Help">
+    <context>jira.general</context>
+    <resource type="download" name="reviki-help.js" location="js/reviki-help.js"/>
+  </web-resource>
+
   <web-resource key="atlassian-jira-reviki-css" name="Jira Reviki Renderer CSS">
     <context>jira.general</context>
     <resource type="download" name="reviki-style.css" location="style/reviki-style.css"/>
@@ -34,6 +39,14 @@
     <resource type="download" name="reviki-highlight.pack.js" location="js/reviki-highlight.pack.js"/>
     <resource type="download" name="reviki-highlight.js" location="js/reviki-highlight.js"/>
   </web-resource>
+
+  <webwork1 key="reviki-actions" class="java.lang.Object">
+    <actions>
+        <action name="net.hillsdon.reviki.jira.renderer.RevikiHelpAction" alias="RevikiHelpAction">
+            <view name="success">/templates/reviki-help.vm</view>
+        </action>
+    </actions>
+  </webwork1>
 
   <webwork1 key="atlassian-jira-reviki-config"
             name="Jira Reviki Renderer Configuration"
