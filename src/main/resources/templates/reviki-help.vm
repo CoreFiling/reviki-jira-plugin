@@ -1,3 +1,5 @@
+## Double hash is a comment in velocity
+#set( $H = '#' )
 <html>
   <head>
     <!-- $webResourceManager.requireResourcesForContext() should be used to fetch the CSS resource
@@ -13,7 +15,7 @@
         <tr><td>**bold**</td><td class="arrow">&#8594;</td><td><strong>bold</strong></td></tr>
         <tr><td>--strikethrough--</td><td class="arrow">&#8594;</td><td><del>strikethrough</del></td></tr>
         <tr><td>* Bullet list<br/>* Second item<br/>** Sub item</td><td class="arrow">&#8594;</td><td>&#8226; Bullet list<br/>&#8226; Second item<br/>..&#8226; Sub item</td></tr>
-        <tr><td># Numbered list<br/># Second item<br/>## Sub item</td><td class="arrow">&#8594;</td><td>1. Numbered list<br/>2. Second item<br/>2.1 Sub item</td></tr>
+        <tr><td># Numbered list<br/># Second item<br/>$H$H Sub item</td><td class="arrow">&#8594;</td><td>1. Numbered list<br/>2. Second item<br/>2.1 Sub item</td></tr>
         <tr><td>WikiPage, c2:WikiPage</td><td class="arrow">&#8594;</td><td>Internal, inter-wiki links</td></tr>
         <tr><td>[[AnyLink|named link]]</td><td class="arrow">&#8594;</td><td><a href="">named link</a></td></tr>
         <tr><td>== Large heading<br/>=== Medium heading<br/>==== Small heading</td><td class="arrow">&#8594;</td><td><span style="font-size: 130%; font-weight: bold;"> Large heading</span><br/><span style="font-size: 115%; font-weight: bold;">Medium heading</span><br/><span style="font-size: 100%; font-weight: bold;">Small heading</span></td></tr>
