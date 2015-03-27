@@ -16,7 +16,7 @@
 
     <repositories>
         <repository>
-            <id>local</id>
+            <id>build-local</id>
             <url>file://${project.basedir}/repo</url>
       <releases>
         <enabled>true</enabled>
