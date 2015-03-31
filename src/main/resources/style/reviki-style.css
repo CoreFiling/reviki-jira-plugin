@@ -157,7 +157,7 @@ div#MarkupHelp table {
   border-right: 3px solid #BBB; border-bottom: 3px solid #BBB
 }
 div#MarkupHelp td {
-  font-size: 80%; padding: 0.2em; margin: 0; border: 1px solid #999; border-width: 1px 0 1px 0;
+  font-size: 80%; padding: 0.3em; margin: 0; border: 1px solid #999; border-width: 1px 0 1px 0;
   vertical-align: top; white-space: nowrap;
 }
 div#MarkupHelp td.arrow {
@@ -177,6 +177,19 @@ div#MarkupHelp p {
 #MarkupHelp table {
   border-spacing: 0;
   border-collapse: separate;
+  float: left;
+  margin-right: 15px;
+}
+
+#Markuphelp pre {
+  margin-top: 0;
+}
+
+#Markuphelp blockquote {
+  padding: 10px 20px;
+  margin: 0px 0px 20px;
+  font-size: 17.5px;
+  border-left: 5px solid #EEE;
 }
 
 .reviki-preview-button.help-icon {
