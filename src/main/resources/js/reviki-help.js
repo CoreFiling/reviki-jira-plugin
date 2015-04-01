@@ -7,7 +7,7 @@ var popupOptions = {
   scrollbars: 'yes',
   resizable: 'yes',
   width: 800,
-  height: 500
+  height: 620
 };
 
 AJS.toInit(function() {
