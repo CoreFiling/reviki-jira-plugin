@@ -35,6 +35,9 @@ public class JiraRevikiRenderingPlugin implements JiraRendererPlugin {
 
   @Override
   public String render(final String text, final IssueRenderContext ctx) {
+    if (text == null) {
+      return null;
+    }
     if (text.startsWith("{")) {
       for (JiraRendererPlugin p : _rendererManager.getAllActiveRenderers()) {
         String[] names;
