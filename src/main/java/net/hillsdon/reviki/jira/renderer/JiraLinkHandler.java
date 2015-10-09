@@ -1,6 +1,5 @@
 package net.hillsdon.reviki.jira.renderer;
 
-import net.hillsdon.reviki.vc.PageReference;
 import net.hillsdon.reviki.wiki.renderer.creole.LinkParts;
 import net.hillsdon.reviki.wiki.renderer.creole.LinkResolutionContext;
 import net.hillsdon.reviki.wiki.renderer.creole.SimpleLinkHandler;
@@ -16,7 +15,7 @@ public class JiraLinkHandler extends SimpleLinkHandler {
    * by JiraInternalLinker
    */
   @Override
-  public boolean isAcronymNotLink(PageReference page, LinkParts parts) {
+  public boolean isAcronymNotLink(LinkParts parts) {
     return false;
   }
 }
