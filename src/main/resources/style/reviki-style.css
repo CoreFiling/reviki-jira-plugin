@@ -197,7 +197,7 @@ div.markup_table {
   height: 35em;
 }
 
-.reviki-preview-button.help-icon {
+.reviki.help-icon {
   cursor: pointer;
   background: url("../../../images/icons/ico_help.png") center no-repeat;
 }

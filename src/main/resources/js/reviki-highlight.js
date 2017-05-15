@@ -2,7 +2,7 @@ function highlight() {
   AJS.$('pre.wiki-content code').each(function(i, block) {
     hljs.highlightBlock(block);
   });
-  
+
   AJS.$('code.wiki-content.inline').each(function(i, block) {
     hljs.highlightBlock(block);
   });

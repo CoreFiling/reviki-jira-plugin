@@ -19,7 +19,7 @@ AJS.toInit(function() {
       window.open(contextPath + "/RevikiHelpAction.jspa", "reviki_renderer_notation_help", options);
     }
 
-    AJS.$("a.reviki-preview-button.help-icon").bind("click", function (event) {
+    AJS.$("a.reviki.help-icon").bind("click", function (event) {
       event.preventDefault();
       showHelp();
     });

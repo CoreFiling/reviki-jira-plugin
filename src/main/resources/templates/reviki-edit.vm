@@ -2,37 +2,27 @@
   <input class="textfield text long-field#if($class) $class#end" id="$fieldId" name="$fieldId"
     #if($maxlength)maxlength="$maxlength"#end type="text" value="$textutils.htmlEncode($!value)"/>
 #else
-<div class="wiki-edit">
-  <div style="height: 300px; display: none;">&nbsp;</div>
-  <div id="${fieldId}-wiki-edit" class="wiki-edit-content">
-    <textarea #if($accesskey)accesskey="$accesskey"#end
-              style="display: inline;"
-              class="textarea long-field long-field mentionable"
-              id="${fieldId}"
-              name="${fieldId}"
-              #if($cols)cols="$cols"#end
-              #if($rows)rows="$rows"#end
-              #if($data-projectkey)data-projectkey="$data-projectkey"#end
-              #if($data-issuekey)data-issuekey="$data-issuekey"#end
-              wrap="virtual"
-            >$textutils.htmlEncode($!value)</textarea>
-    <div class="content-inner"></div>
+<div class="jira-wikifield" field-id=$!fieldId issue-key=$!issueKey renderer-type=$!rendererType>
+  <div class="wiki-edit">
+    <div style="height: 300px; display: none;">&nbsp;</div>
+    <div id="${fieldId}-wiki-edit" class="wiki-edit-content">
+      <textarea #if($accesskey)accesskey="$accesskey"#end
+                style="display: inline;"
+                class="textarea long-field long-field mentionable"
+                id="${fieldId}"
+                name="${fieldId}"
+                #if($cols)cols="$cols"#end
+                #if($rows)rows="$rows"#end
+                #if($data-projectkey)data-projectkey="$data-projectkey"#end
+                #if($data-issuekey)data-issuekey="$data-issuekey"#end
+                wrap="virtual"
+              >$textutils.htmlEncode($!value)</textarea>
+      <div class="content-inner"></div>
+    </div>
   </div>
-</div>
-<div class="field-tools">
-  <dl id="wiki-prefs" class="wiki-js-prefs" style="display:none">
-      <dt>trigger</dt>
-      <dd>${fieldId}-preview_link</dd>
-      <dt>fieldId</dt>
-      <dd>$!fieldId</dd>
-      <dt>fieldName</dt>
-      <dd>$textutils.htmlEncode($!fieldName)</dd>
-      <dt>rendererType</dt>
-      <dd>$!rendererType</dd>
-      <dt>issueKey</dt>
-      <dd>$!issueKey</dd>
-  </dl>
-  <a class="fullscreen" href="#" id="${fieldId}-preview_link" title="preview"><span class="aui-icon wiki-renderer-icon"></span></a>
-  <a class="reviki-preview-button help-icon aui-icon" id="reviki-help-button-${fieldId}" title="reviki help"></a>
+  <div class="field-tools">
+    <a class="wiki-preview fullscreen" href="#" id="${fieldId}-preview_link" title="preview"><span class="aui-icon wiki-renderer-icon"></span></a>
+    <a class="reviki help-icon aui-icon" id="reviki-help-button-${fieldId}" title="reviki help"></a>
+  </div>
 </div>
 #end
