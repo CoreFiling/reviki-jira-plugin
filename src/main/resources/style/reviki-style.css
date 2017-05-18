@@ -201,3 +201,7 @@ div.markup_table {
   cursor: pointer;
   background: url("../../../images/icons/ico_help.png") center no-repeat;
 }
+
+.aui-icon.wiki-renderer-icon {
+  cursor: pointer !important;
+}
