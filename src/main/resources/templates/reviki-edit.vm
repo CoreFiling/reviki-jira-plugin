@@ -2,7 +2,7 @@
   <input class="textfield text long-field#if($class) $class#end" id="$fieldId" name="$fieldId"
     #if($maxlength)maxlength="$maxlength"#end type="text" value="$textutils.htmlEncode($!value)"/>
 #else
-<div class="jira-wikifield" field-id=$!fieldId issue-key=$!issueKey renderer-type=$!rendererType>
+<div class="jira-wikifield" field-id=$!fieldId #if($issueKey)issue-key=$!issueKey#end renderer-type=$!rendererType>
   <div class="wiki-edit">
     <div style="height: 300px; display: none;">&nbsp;</div>
     <div id="${fieldId}-wiki-edit" class="wiki-edit-content">
