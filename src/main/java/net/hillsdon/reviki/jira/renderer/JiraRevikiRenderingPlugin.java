@@ -47,6 +47,9 @@ public class JiraRevikiRenderingPlugin implements JiraRendererPlugin {
         else if (RENDERER_TYPE.equals(p.getRendererType())) {
           names = new String[]{p.getRendererType(), "reviki"};
         }
+        else if ("jira-gherkin-renderer".equals(p.getRendererType())) {
+          names = new String[]{p.getRendererType(), "markdown"};
+        }
         else {
           names = new String[]{p.getRendererType()};
         }
